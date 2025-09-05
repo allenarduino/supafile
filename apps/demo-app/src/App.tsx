@@ -41,6 +41,7 @@ const App = () => (
         borderHoverColor="#1d4ed8"
         height="200px"
         minHeight="200px"
+        iconSize='10px'
       />
     </div>
   </div>

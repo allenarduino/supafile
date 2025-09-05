@@ -6,11 +6,11 @@ if (typeof document !== 'undefined' && !document.getElementById('supafile-upload
     link.id = 'supafile-upload-widget-styles';
     link.rel = 'stylesheet';
     link.href = 'data:text/css;base64,' + btoa(`
-    .upload-widget{width:100%;max-width:var(--upload-widget-max-width,32rem);margin:0 auto;height:var(--upload-widget-height,auto);min-height:var(--upload-widget-min-height,200px)}
+    .upload-widget{width:100%;max-width:var(--upload-widget-max-width,28rem);margin:0 auto;height:var(--upload-widget-height,auto);min-height:var(--upload-widget-min-height,120px)}
     .upload-widget.has-custom-height{min-height:unset}
-    .upload-dropzone{background-color:var(--upload-widget-bg,white);border:2px dashed var(--upload-widget-border-color,#d1d5db);border-radius:var(--upload-widget-border-radius,0.5rem);padding:var(--upload-widget-padding,2rem);text-align:center;transition:border-color 0.2s ease;cursor:pointer;height:100%;display:flex;flex-direction:column;justify-content:center}
+    .upload-dropzone{background-color:var(--upload-widget-bg,white);border:2px dashed var(--upload-widget-border-color,#d1d5db);border-radius:var(--upload-widget-border-radius,0.5rem);padding:var(--upload-widget-padding,0.75rem);text-align:center;transition:border-color 0.2s ease;cursor:pointer;height:100%;display:flex;flex-direction:column;justify-content:center}
     .upload-dropzone:hover{border-color:var(--upload-widget-border-hover,#9ca3af)}
-    .upload-icon{width:var(--upload-widget-icon-size,3rem);height:var(--upload-widget-icon-size,3rem);margin:0 auto 1rem;color:var(--upload-widget-icon-color,#9ca3af)}
+    .upload-icon{width:var(--upload-widget-icon-size,1.5rem);height:var(--upload-widget-icon-size,1.5rem);margin:0 auto 0.5rem;color:var(--upload-widget-icon-color,#9ca3af)}
     .upload-title{font-size:var(--upload-widget-title-size,1.125rem);font-weight:500;color:var(--upload-widget-title-color,#111827);margin-bottom:0.5rem}
     .upload-instructions{font-size:var(--upload-widget-instructions-size,1rem);color:var(--upload-widget-text-color,#6b7280);margin-bottom:0.25rem}
     .upload-size-limit{font-size:var(--upload-widget-size-limit-size,0.875rem);color:var(--upload-widget-text-muted,#9ca3af)}
