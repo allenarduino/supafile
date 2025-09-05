@@ -1,35 +1,18 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { FileUploader, type UploadedFile } from '@supafile/upload-widget';
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => (
+  <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-8">
+    <h1 className="text-3xl font-bold mb-6">Supafile Demo</h1>
+    <FileUploader
+      supabaseUrl="https://xyz.supabase.co"
+      supabaseAnonKey="your-anon-key"
+      bucket="uploads"
+      maxFileSize={10 * 1024 * 1024}
+      allowedTypes={['image/png', 'image/jpeg', 'application/pdf']}
+      onUploadComplete={(file: UploadedFile) => console.log('Uploaded file', file)}
+      onUploadError={(file, err) => console.error('Upload error', file.name, err)}
+    />
+  </div>
+);
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
-
-export default App
+export default App;

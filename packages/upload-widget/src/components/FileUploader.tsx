@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { useUpload, type UploadedFile } from '../hooks/useUpload';
-import { FilePreview } from './FilePreview.tsx';
+import { FilePreview } from './FilePreview';
 
 interface FileUploaderProps {
     supabaseUrl: string;
@@ -9,8 +9,6 @@ interface FileUploaderProps {
     maxFileSize?: number;
     allowedTypes?: string[];
     multiple?: boolean;
-    buttonText?: string;
-    dropAreaText?: string;
     className?: string;
     onUploadComplete?: (file: UploadedFile) => void;
     onUploadError?: (file: File, error: Error) => void;
@@ -23,8 +21,6 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
     maxFileSize = 5 * 1024 * 1024,
     allowedTypes = ['image/png', 'image/jpeg'],
     multiple = true,
-    buttonText = 'Select Files',
-    dropAreaText = 'Drag & drop files here',
     className,
     onUploadComplete,
     onUploadError
@@ -57,38 +53,72 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
     };
 
     return (
-        <div
-            className={`border-2 border-dashed p-4 rounded-md ${className}`}
-            onDrop={handleDrop}
-            onDragOver={(e) => e.preventDefault()}
-        >
-            <input
-                type="file"
-                multiple={multiple}
-                ref={inputRef}
-                onChange={(e) => handleFiles(e.target.files)}
-                className="hidden"
-            />
-            <button
-                className="bg-blue-500 text-white px-4 py-2 rounded mb-2"
+        <div className={`upload-widget ${className || ''}`}>
+            <div
+                className="upload-dropzone"
+                onDrop={handleDrop}
+                onDragOver={(e) => e.preventDefault()}
                 onClick={() => inputRef.current?.click()}
             >
-                {buttonText}
-            </button>
-            <p className="text-gray-500 text-sm">{dropAreaText}</p>
+                <input
+                    type="file"
+                    multiple={multiple}
+                    ref={inputRef}
+                    onChange={(e) => handleFiles(e.target.files)}
+                    className="hidden"
+                />
 
-            {uploading && <p>Uploading...</p>}
+                {/* Upload Icon */}
+                <div className="upload-icon">
+                    <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                </div>
 
-            <div className="mt-4 space-y-2">
-                {files.map((file) => (
-                    <div key={file.name} className="flex items-center justify-between">
-                        <FilePreview file={file} />
-                        <button className="text-red-500" onClick={() => removeFile(file.name)}>
-                            Remove
-                        </button>
+                {/* Main Text */}
+                <h3 className="upload-title">
+                    {files.length > 0 ? `Upload ${files.length} file${files.length > 1 ? 's' : ''}` : 'Upload files'}
+                </h3>
+
+                {/* Instruction Text */}
+                <p className="upload-instructions">
+                    Drag and drop files here, or click to select
+                </p>
+
+                {/* File Size Limit */}
+                <p className="upload-size-limit">
+                    Maximum file size: {Math.round(maxFileSize / (1024 * 1024))} MB
+                </p>
+
+                {uploading && (
+                    <div className="upload-loading">
+                        <div className="upload-loading-content">
+                            <div className="upload-spinner"></div>
+                            Uploading...
+                        </div>
                     </div>
-                ))}
+                )}
             </div>
+
+            {/* File List */}
+            {files.length > 0 && (
+                <div className="file-list">
+                    {files.map((file) => (
+                        <div key={file.name} className="file-item">
+                            <FilePreview file={file} />
+                            <button
+                                className="remove-button"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    removeFile(file.name);
+                                }}
+                            >
+                                Remove
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 };
