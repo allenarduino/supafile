@@ -1,7 +1,20 @@
 {
   "name": "@supafile/upload-widget",
-  "private": true,
-  "version": "0.0.0",
+  "private": false,
+  "version": "1.0.0",
+  "description": "A customizable React file upload widget for Supabase Storage with drag-and-drop support",
+  "keywords": ["react", "supabase", "file-upload", "widget", "drag-drop", "typescript"],
+  "author": "Allen Jones allen.jones.tech@gmail.com",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/allenarduino/supafile",
+    "directory": "packages/upload-widget"
+  },
+  "homepage": "https://github.com/allenarduino/supafile",
+  "bugs": {
+    "url": "https://github.com/allenarduino/supafile"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -28,9 +41,11 @@
     "test:coverage": "vitest --coverage"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.57.0",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "@supabase/supabase-js": "^2.57.0"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
