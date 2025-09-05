@@ -26,6 +26,11 @@ interface FileUploaderProps {
     iconColor?: string;
     iconSize?: string;
     titleSize?: string;
+    instructionsSize?: string;
+    sizeLimitSize?: string;
+    fileNameSize?: string;
+    fileSizeSize?: string;
+    buttonSize?: string;
 }
 
 export const FileUploader: React.FC<FileUploaderProps> = ({
@@ -51,7 +56,12 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
     textColor,
     iconColor,
     iconSize,
-    titleSize
+    titleSize,
+    instructionsSize,
+    sizeLimitSize,
+    fileNameSize,
+    fileSizeSize,
+    buttonSize
 }) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const { files, uploading, uploadFiles, removeFile } = useUpload({ supabaseUrl, supabaseAnonKey, bucket });
@@ -95,11 +105,16 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
         '--upload-widget-icon-color': iconColor,
         '--upload-widget-icon-size': iconSize,
         '--upload-widget-title-size': titleSize,
+        '--upload-widget-instructions-size': instructionsSize,
+        '--upload-widget-size-limit-size': sizeLimitSize,
+        '--upload-widget-file-name-size': fileNameSize,
+        '--upload-widget-file-size-size': fileSizeSize,
+        '--upload-widget-button-size': buttonSize,
     } as React.CSSProperties;
 
     return (
         <div
-            className={`upload-widget ${className || ''}`}
+            className={`upload-widget ${height ? 'has-custom-height' : ''} ${className || ''}`}
             style={widgetStyle}
         >
             <div
@@ -116,27 +131,63 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
                     className="hidden"
                 />
 
-                {/* Upload Icon */}
-                <div className="upload-icon">
-                    <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                    </svg>
-                </div>
+                {/* Show upload area when no files */}
+                {files.length === 0 && (
+                    <>
+                        {/* Upload Icon */}
+                        <div className="upload-icon">
+                            <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                            </svg>
+                        </div>
 
-                {/* Main Text */}
-                <h3 className="upload-title">
-                    {files.length > 0 ? `Upload ${files.length} file${files.length > 1 ? 's' : ''}` : 'Upload files'}
-                </h3>
+                        {/* Main Text */}
+                        <h3 className="upload-title">
+                            Upload files
+                        </h3>
 
-                {/* Instruction Text */}
-                <p className="upload-instructions">
-                    Drag and drop files here, or click to select
-                </p>
+                        {/* Instruction Text */}
+                        <p className="upload-instructions">
+                            Drag and drop files here, or click to select
+                        </p>
 
-                {/* File Size Limit */}
-                <p className="upload-size-limit">
-                    Maximum file size: {Math.round(maxFileSize / (1024 * 1024))} MB
-                </p>
+                        {/* File Size Limit */}
+                        <p className="upload-size-limit">
+                            Maximum file size: {Math.round(maxFileSize / (1024 * 1024))} MB
+                        </p>
+                    </>
+                )}
+
+                {/* Show file list when files are present */}
+                {files.length > 0 && (
+                    <div className="file-list-inside">
+                        <div className="upload-header">
+                            <h3 className="upload-title">
+                                {files.length} file{files.length > 1 ? 's' : ''} selected
+                            </h3>
+                            <p className="upload-instructions">
+                                Click to add more files
+                            </p>
+                        </div>
+
+                        <div className="file-list">
+                            {files.map((file) => (
+                                <div key={file.name} className="file-item">
+                                    <FilePreview file={file} />
+                                    <button
+                                        className="remove-button"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            removeFile(file.name);
+                                        }}
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
 
                 {uploading && (
                     <div className="upload-loading">
@@ -147,26 +198,6 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
                     </div>
                 )}
             </div>
-
-            {/* File List */}
-            {files.length > 0 && (
-                <div className="file-list">
-                    {files.map((file) => (
-                        <div key={file.name} className="file-item">
-                            <FilePreview file={file} />
-                            <button
-                                className="remove-button"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    removeFile(file.name);
-                                }}
-                            >
-                                Remove
-                            </button>
-                        </div>
-                    ))}
-                </div>
-            )}
         </div>
     );
 };
