@@ -12,6 +12,7 @@ interface FileUploaderProps {
     className?: string;
     onUploadComplete?: (file: UploadedFile) => void;
     onUploadError?: (file: File, error: Error) => void;
+    showFilePreviews?: boolean;
     // Style props
     height?: string;
     minHeight?: string;
@@ -43,6 +44,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
     className,
     onUploadComplete,
     onUploadError,
+    showFilePreviews = true,
     // Style props
     height,
     minHeight,
@@ -158,8 +160,8 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
                     </>
                 )}
 
-                {/* Show file list when files are present */}
-                {files.length > 0 && (
+                {/* Show file list when files are present and previews are enabled */}
+                {files.length > 0 && showFilePreviews && (
                     <div className="file-list-inside">
                         <div className="upload-header">
                             <h3 className="upload-title">
@@ -178,7 +180,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
                                         className="remove-button"
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            removeFile(file.name);
+                                            removeFile(file.id);
                                         }}
                                     >
                                         Remove
@@ -186,6 +188,18 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
                                 </div>
                             ))}
                         </div>
+                    </div>
+                )}
+
+                {/* Show simple file count when previews are disabled */}
+                {files.length > 0 && !showFilePreviews && (
+                    <div className="upload-header">
+                        <h3 className="upload-title">
+                            {files.length} file{files.length > 1 ? 's' : ''} selected
+                        </h3>
+                        <p className="upload-instructions">
+                            Click to add more files
+                        </p>
                     </div>
                 )}
 
