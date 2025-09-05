@@ -12,6 +12,20 @@ interface FileUploaderProps {
     className?: string;
     onUploadComplete?: (file: UploadedFile) => void;
     onUploadError?: (file: File, error: Error) => void;
+    // Style props
+    height?: string;
+    minHeight?: string;
+    maxWidth?: string;
+    backgroundColor?: string;
+    borderColor?: string;
+    borderHoverColor?: string;
+    padding?: string;
+    borderRadius?: string;
+    titleColor?: string;
+    textColor?: string;
+    iconColor?: string;
+    iconSize?: string;
+    titleSize?: string;
 }
 
 export const FileUploader: React.FC<FileUploaderProps> = ({
@@ -23,7 +37,21 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
     multiple = true,
     className,
     onUploadComplete,
-    onUploadError
+    onUploadError,
+    // Style props
+    height,
+    minHeight,
+    maxWidth,
+    backgroundColor,
+    borderColor,
+    borderHoverColor,
+    padding,
+    borderRadius,
+    titleColor,
+    textColor,
+    iconColor,
+    iconSize,
+    titleSize
 }) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const { files, uploading, uploadFiles, removeFile } = useUpload({ supabaseUrl, supabaseAnonKey, bucket });
@@ -52,8 +80,28 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
         handleFiles(e.dataTransfer.files);
     };
 
+    // Create style object from props
+    const widgetStyle = {
+        '--upload-widget-height': height,
+        '--upload-widget-min-height': minHeight,
+        '--upload-widget-max-width': maxWidth,
+        '--upload-widget-bg': backgroundColor,
+        '--upload-widget-border-color': borderColor,
+        '--upload-widget-border-hover': borderHoverColor,
+        '--upload-widget-padding': padding,
+        '--upload-widget-border-radius': borderRadius,
+        '--upload-widget-title-color': titleColor,
+        '--upload-widget-text-color': textColor,
+        '--upload-widget-icon-color': iconColor,
+        '--upload-widget-icon-size': iconSize,
+        '--upload-widget-title-size': titleSize,
+    } as React.CSSProperties;
+
     return (
-        <div className={`upload-widget ${className || ''}`}>
+        <div
+            className={`upload-widget ${className || ''}`}
+            style={widgetStyle}
+        >
             <div
                 className="upload-dropzone"
                 onDrop={handleDrop}
