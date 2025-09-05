@@ -1,4 +1,4 @@
-# @supafile/upload-widget
+# supafile-file-upload
 
 A modern, self-contained React file upload widget built specifically for Supabase users. Features drag-and-drop support, automatic Supabase storage integration, and beautiful styling out of the box.
 
@@ -18,11 +18,11 @@ A modern, self-contained React file upload widget built specifically for Supabas
 ## Installation
 
 ```bash
-npm install @supafile/upload-widget
+npm install supafile-file-upload
 # or
-yarn add @supafile/upload-widget
+yarn add supafile-file-upload
 # or
-pnpm add @supafile/upload-widget
+pnpm add supafile-file-upload
 ```
 
 ## Quick Start
@@ -30,7 +30,7 @@ pnpm add @supafile/upload-widget
 Perfect for Supabase projects! Just provide your Supabase credentials and you're ready to go:
 
 ```tsx
-import { FileUploader } from '@supafile/upload-widget';
+import { FileUploader } from 'supafile-file-upload';
 
 function App() {
   return (
@@ -96,7 +96,7 @@ function App() {
 ### Basic Supabase Integration
 
 ```tsx
-import { FileUploader } from '@supafile/upload-widget';
+import { FileUploader } from 'supafile-file-upload';
 
 <FileUploader
   supabaseUrl="https://xyz.supabase.co"

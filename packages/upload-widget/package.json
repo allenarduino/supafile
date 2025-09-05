@@ -1,7 +1,7 @@
 {
-  "name": "supafile-widget",
+  "name": "supafile-file-upload",
   "private": false,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A customizable React file upload widget for Supabase Storage with drag-and-drop support",
   "keywords": ["react", "supabase", "file-upload", "widget", "drag-drop", "typescript"],
   "author": "Allen Jones allen.jones.tech@gmail.com",
