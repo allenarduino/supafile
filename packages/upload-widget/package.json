@@ -1,5 +1,5 @@
 {
-  "name": "supafile-file-upload",
+  "name": "supafile-react-upload-widget",
   "private": false,
   "version": "1.0.1",
   "description": "A customizable React file upload widget for Supabase Storage with drag-and-drop support",

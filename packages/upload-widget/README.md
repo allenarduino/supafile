@@ -1,4 +1,4 @@
-# supafile-file-upload
+# supafile-react-upload-widget
 
 A modern, self-contained React file upload widget built specifically for Supabase users. Features drag-and-drop support, automatic Supabase storage integration, and beautiful styling out of the box.
 
@@ -18,11 +18,11 @@ A modern, self-contained React file upload widget built specifically for Supabas
 ## Installation
 
 ```bash
-npm install supafile-file-upload
+npm install supafile-react-upload-widget
 # or
-yarn add supafile-file-upload
+yarn add supafile-react-upload-widget
 # or
-pnpm add supafile-file-upload
+pnpm add supafile-react-upload-widget
 ```
 
 ## Quick Start
@@ -30,7 +30,7 @@ pnpm add supafile-file-upload
 Perfect for Supabase projects! Just provide your Supabase credentials and you're ready to go:
 
 ```tsx
-import { FileUploader } from 'supafile-file-upload';
+import { FileUploader } from 'supafile-react-upload-widget';
 
 function App() {
   return (
@@ -96,7 +96,7 @@ function App() {
 ### Basic Supabase Integration
 
 ```tsx
-import { FileUploader } from 'supafile-file-upload';
+import { FileUploader } from 'supafile-react-upload-widget';
 
 <FileUploader
   supabaseUrl="https://xyz.supabase.co"
@@ -189,7 +189,7 @@ You can customize the widget using CSS custom properties:
 The package includes full TypeScript definitions:
 
 ```tsx
-import { FileUploader, type UploadedFile } from '@supafile/upload-widget';
+import { FileUploader, type UploadedFile } from 'supafile-react-upload-widget';
 
 interface MyComponentProps {
   onFileUpload: (file: UploadedFile) => void;
@@ -214,7 +214,7 @@ const MyComponent: React.FC<MyComponentProps> = ({ onFileUpload }) => {
 For advanced usage, you can use the `useUpload` hook directly:
 
 ```tsx
-import { useUpload } from '@supafile/upload-widget';
+import { useUpload } from 'supafile-react-upload-widget';
 
 const MyComponent = () => {
   const { files, uploading, uploadFiles, removeFile } = useUpload({
