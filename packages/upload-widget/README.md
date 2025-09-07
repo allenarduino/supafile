@@ -4,6 +4,7 @@ A modern, self-contained React file upload widget built specifically for Supabas
 
 ## Features
 
+- **Secure Supabase Integration** - Pass Supabase client instance (recommended) or credentials
 - **Built for Supabase** - Easy integration with Supabase Storage
 - **Self-contained styling** - No CSS imports needed
 - **Drag & drop support** - Modern file upload experience
@@ -13,7 +14,7 @@ A modern, self-contained React file upload widget built specifically for Supabas
 - **TypeScript support** - Full type definitions
 - **Tested** - Comprehensive test coverage
 - **Zero dependencies** - Lightweight and fast
-- **Secure** - Uses Supabase's built-in security and authentication
+- **Production-ready** - Secure authentication and error handling
 
 ## Installation
 
@@ -24,6 +25,15 @@ yarn add supafile-react-upload-widget
 # or
 pnpm add supafile-react-upload-widget
 ```
+
+## Security Features
+
+This widget prioritizes security and follows Supabase best practices:
+
+- **Secure Client Support** - Pass authenticated Supabase client instances
+- **Credential Validation** - Ensures proper authentication setup
+- **Production Ready** - Designed for secure production environments
+- **Demo Mode** - Direct credentials supported for testing only
 
 ## Quick Start
 
@@ -81,16 +91,21 @@ function App() {
 
 ## Props
 
+### Authentication Props (Choose One)
+
+| Prop | Type | Description | Security Level |
+|------|------|-------------|----------------|
+| `supabase` | `SupabaseClient` | **Recommended**: Your authenticated Supabase client instance | **Production Ready** |
+| `supabaseUrl` | `string` | **Demo Only**: Your Supabase project URL | **Testing Only** |
+| `supabaseAnonKey` | `string` | **Demo Only**: Your Supabase anonymous/public key | **Testing Only** |
+
 ### Required Props
 
 | Prop | Type | Description |
 |------|------|-------------|
-| `supabase` | `SupabaseClient` | **Option 1**: Your Supabase client instance (recommended for production) |
-| `supabaseUrl` | `string` | **Option 2**: Your Supabase project URL (for demos/testing only) |
-| `supabaseAnonKey` | `string` | **Option 2**: Your Supabase anonymous/public key (for demos/testing only) |
 | `bucket` | `string` | Supabase Storage bucket name |
 
-> **Note**: You must provide either `supabase` OR both `supabaseUrl` + `supabaseAnonKey`. The `supabase` prop is recommended for production use.
+> **Security Note**: You must provide either `supabase` OR both `supabaseUrl` + `supabaseAnonKey`. The `supabase` prop is recommended for production use as it allows for proper authentication and session management.
 
 ### Optional Props
 
@@ -129,8 +144,8 @@ function App() {
 import { FileUploader } from 'supafile-react-upload-widget';
 
 <FileUploader
-  supabaseUrl="https://xyz.supabase.co"
-  supabaseAnonKey="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  supabaseUrl="https://your-project.supabase.co"
+      supabaseAnonKey="your-supabase-anon-key"
   bucket="user-uploads"
   maxFileSize={10 * 1024 * 1024}
   allowedTypes={['image/png', 'image/jpeg', 'application/pdf']}
@@ -617,6 +632,16 @@ MIT License - see [LICENSE](LICENSE) file for details.
 - [Discussions](https://github.com/your-org/supafile/discussions)
 
 ## Changelog
+
+### v1.0.1 - Secure Supabase Client Support
+- **NEW**: Added support for passing Supabase client instances (recommended for production)
+- **NEW**: Enhanced security with proper authentication handling
+- **BREAKING**: Updated TypeScript types for better security
+- **NEW**: Comprehensive security documentation and warnings
+- **IMPROVED**: Better error handling and validation
+- **NEW**: Updated examples to use secure client approach
+- **IMPROVED**: Better UI with Lucide React icons
+- **IMPROVED**: More compact and responsive design
 
 ### v1.0.0
 - Initial release
