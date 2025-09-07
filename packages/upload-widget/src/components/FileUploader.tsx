@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { useUpload, type UploadedFile } from '../hooks/useUpload';
 import { FilePreview } from './FilePreview';
+import { Upload, X } from 'lucide-react';
 
 interface FileUploaderProps {
     supabaseUrl: string;
@@ -138,9 +139,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
                     <>
                         {/* Upload Icon */}
                         <div className="upload-icon">
-                            <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                            </svg>
+                            <Upload size={24} />
                         </div>
 
                         {/* Main Text */}
@@ -182,8 +181,9 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
                                             e.stopPropagation();
                                             removeFile(file.id);
                                         }}
+                                        title="Remove file"
                                     >
-                                        Remove
+                                        <X size={16} />
                                     </button>
                                 </div>
                             ))}
