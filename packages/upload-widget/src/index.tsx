@@ -36,10 +36,22 @@ if (typeof document !== 'undefined' && !document.getElementById('supafile-upload
     .file-size{color:var(--upload-widget-file-size-color,#6b7280);font-size:var(--upload-widget-file-size-size,0.75rem)}
     .remove-button{color:var(--upload-widget-remove-color,#ef4444);font-size:var(--upload-widget-button-size,0.875rem);font-weight:500;padding:0.5rem;border-radius:0.25rem;transition:all 0.2s ease;border:none;background:none;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;width:2rem;height:2rem}
     .remove-button:hover{color:var(--upload-widget-remove-hover,#dc2626);background-color:var(--upload-widget-remove-bg-hover,#fef2f2)}
+    .upload-error-container{background-color:var(--upload-widget-error-bg,#fef2f2);border:1px solid var(--upload-widget-error-border,#fecaca);border-radius:var(--upload-widget-border-radius,0.5rem);padding:0.75rem;margin-top:0.75rem;animation:slideIn 0.2s ease-out}
+    .upload-error-header{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem}
+    .upload-error-icon{color:var(--upload-widget-error-color,#dc2626);flex-shrink:0}
+    .upload-error-title{color:var(--upload-widget-error-color,#dc2626);font-size:var(--upload-widget-error-title-size,0.875rem);font-weight:600;flex:1}
+    .upload-error-dismiss{color:var(--upload-widget-error-color,#dc2626);background:none;border:none;cursor:pointer;padding:0.25rem;border-radius:0.25rem;transition:background-color 0.2s ease;display:flex;align-items:center;justify-content:center}
+    .upload-error-dismiss:hover{background-color:var(--upload-widget-error-dismiss-hover,#fecaca)}
+    .upload-error-list{display:flex;flex-direction:column;gap:0.5rem}
+    .upload-error-item{background-color:var(--upload-widget-error-item-bg,#ffffff);border-radius:0.25rem;padding:0.5rem;border-left:3px solid var(--upload-widget-error-color,#dc2626)}
+    .upload-error-file{color:var(--upload-widget-error-file-color,#111827);font-size:var(--upload-widget-error-file-size,0.75rem);font-weight:500;margin-bottom:0.25rem}
+    .upload-error-message{color:var(--upload-widget-error-message-color,#6b7280);font-size:var(--upload-widget-error-message-size,0.75rem);line-height:1.4}
+    @keyframes slideIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
     .hidden{display:none}
   `);
   document.head.appendChild(link);
 }
 
 export { FileUploader } from './components/FileUploader';
+export { ErrorMessage } from './components/ErrorMessage';
 export type { UploadedFile } from './hooks/useUpload';

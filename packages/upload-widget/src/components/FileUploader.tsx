@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { useUpload, type UploadedFile } from '../hooks/useUpload';
 import { FilePreview } from './FilePreview';
+import { ErrorMessage } from './ErrorMessage';
 import { Upload, X } from 'lucide-react';
 import { SupabaseClient } from '@supabase/supabase-js';
 
@@ -78,7 +79,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
         throw new Error('Either supabase client or supabaseUrl + supabaseAnonKey must be provided');
     }
 
-    const { files, uploading, uploadFiles, removeFile } = useUpload({
+    const { files, uploading, errors, uploadFiles, removeFile, clearErrors } = useUpload({
         supabase,
         supabaseUrl,
         supabaseAnonKey,
@@ -100,8 +101,7 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
             return true;
         });
 
-        uploadFiles(validFiles);
-        validFiles.forEach(file => onUploadComplete?.({ name: file.name, url: '', size: file.size, id: file.name }));
+        uploadFiles(validFiles, onUploadComplete, onUploadError);
     };
 
     const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
@@ -228,6 +228,12 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
                     </div>
                 )}
             </div>
+
+            {/* Error Messages */}
+            <ErrorMessage
+                errors={errors}
+                onDismiss={clearErrors}
+            />
         </div>
     );
 };

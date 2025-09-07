@@ -52,6 +52,8 @@ export const useUpload = ({
 
     const uploadFiles = useCallback(async (
         selectedFiles: File[],
+        onUploadComplete?: (file: UploadedFile) => void,
+        onUploadError?: (file: File, error: Error) => void,
         onProgress?: (file: File, percent: number) => void
     ) => {
         setUploading(true);
@@ -63,6 +65,8 @@ export const useUpload = ({
             // Validate file
             const validationError = validateFile(file);
             if (validationError) {
+                const error = new Error(validationError);
+                onUploadError?.(file, error);
                 uploadErrors.push({ file, error: validationError });
                 continue;
             }
@@ -78,6 +82,8 @@ export const useUpload = ({
                     .upload(fileName, file);
 
                 if (error) {
+                    const uploadError = new Error(error.message);
+                    onUploadError?.(file, uploadError);
                     uploadErrors.push({ file, error: error.message });
                     continue;
                 }
@@ -89,16 +95,21 @@ export const useUpload = ({
 
                 onProgress?.(file, 100);
 
-                uploaded.push({
+                const uploadedFile = {
                     id: data.path,
                     name: file.name,
                     url: publicUrl,
                     size: file.size,
-                });
+                };
+
+                uploaded.push(uploadedFile);
+                onUploadComplete?.(uploadedFile);
             } catch (error) {
+                const uploadError = error instanceof Error ? error : new Error('Unknown error');
+                onUploadError?.(file, uploadError);
                 uploadErrors.push({
                     file,
-                    error: error instanceof Error ? error.message : 'Unknown error'
+                    error: uploadError.message
                 });
             }
         }
@@ -106,7 +117,7 @@ export const useUpload = ({
         setFiles(prev => [...prev, ...uploaded]);
         setErrors(uploadErrors);
         setUploading(false);
-    }, [supabase, bucket, validateFile]);
+    }, [client, bucket, validateFile]);
 
     const removeFile = useCallback((fileId: string) => {
         setFiles(prev => prev.filter(f => f.id !== fileId));
