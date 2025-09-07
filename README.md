@@ -4,6 +4,7 @@ A modern, self-contained React file upload widget built specifically for Supabas
 
 ## Features
 
+- **Secure Supabase Integration** - Pass Supabase client instance (recommended) or credentials
 - **Built for Supabase** - Easy integration with Supabase Storage
 - **Self-contained styling** - No CSS imports needed
 - **Drag & drop support** - Modern file upload experience
@@ -13,7 +14,7 @@ A modern, self-contained React file upload widget built specifically for Supabas
 - **TypeScript support** - Full type definitions
 - **Tested** - Comprehensive test coverage
 - **Zero dependencies** - Lightweight and fast
-- **Secure** - Uses Supabase's built-in security and authentication
+- **Production-ready** - Secure authentication and error handling
 
 ## Installation
 
@@ -25,9 +26,43 @@ yarn add supafile-react-upload-widget
 pnpm add supafile-react-upload-widget
 ```
 
+## Security Features
+
+This widget prioritizes security and follows Supabase best practices:
+
+- **Secure Client Support** - Pass authenticated Supabase client instances
+- **Credential Validation** - Ensures proper authentication setup
+- **Production Ready** - Designed for secure production environments
+- **Demo Mode** - Direct credentials supported for testing only
+
 ## Quick Start
 
-Perfect for Supabase projects! Just provide your Supabase credentials and you're ready to go:
+Perfect for Supabase projects! Two ways to use the component:
+
+### Option 1: Pass Supabase Client (Recommended for Production)
+
+```tsx
+import { FileUploader } from 'supafile-react-upload-widget';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  'https://your-project.supabase.co',
+  'your-supabase-anon-key'
+);
+
+function App() {
+  return (
+    <FileUploader
+      supabase={supabase}
+      bucket="your-storage-bucket"
+      onUploadComplete={(file) => console.log('File uploaded to Supabase:', file)}
+      onUploadError={(file, error) => console.error('Upload failed:', error)}
+    />
+  );
+}
+```
+
+### Option 2: Pass Credentials Directly (For Demos/Testing Only)
 
 ```tsx
 import { FileUploader } from 'supafile-react-upload-widget';
@@ -45,6 +80,8 @@ function App() {
 }
 ```
 
+> **⚠️ Security Note**: Option 2 exposes your Supabase credentials in the frontend code. Use Option 1 (passing a Supabase client) for production applications.
+
 ### Supabase Setup
 
 1. Create a Supabase project at [supabase.com](https://supabase.com)
@@ -54,13 +91,21 @@ function App() {
 
 ## Props
 
+### Authentication Props (Choose One)
+
+| Prop | Type | Description | Security Level |
+|------|------|-------------|----------------|
+| `supabase` | `SupabaseClient` | **Recommended**: Your authenticated Supabase client instance | **Production Ready** |
+| `supabaseUrl` | `string` | **Demo Only**: Your Supabase project URL | **Testing Only** |
+| `supabaseAnonKey` | `string` | **Demo Only**: Your Supabase anonymous/public key | **Testing Only** |
+
 ### Required Props
 
 | Prop | Type | Description |
 |------|------|-------------|
-| `supabaseUrl` | `string` | Your Supabase project URL (e.g., `https://xyz.supabase.co`) |
-| `supabaseAnonKey` | `string` | Your Supabase anonymous/public key |
 | `bucket` | `string` | Supabase Storage bucket name |
+
+> **Security Note**: You must provide either `supabase` OR both `supabaseUrl` + `supabaseAnonKey`. The `supabase` prop is recommended for production use as it allows for proper authentication and session management.
 
 ### Optional Props
 
@@ -99,8 +144,8 @@ function App() {
 import { FileUploader } from 'supafile-react-upload-widget';
 
 <FileUploader
-  supabaseUrl="https://xyz.supabase.co"
-  supabaseAnonKey="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  supabaseUrl="https://your-project.supabase.co"
+      supabaseAnonKey="your-supabase-anon-key"
   bucket="user-uploads"
   maxFileSize={10 * 1024 * 1024}
   allowedTypes={['image/png', 'image/jpeg', 'application/pdf']}
@@ -235,6 +280,267 @@ const MyComponent = () => {
 };
 ```
 
+## Saving Files to Supabase Database
+
+Here's a straightforward example showing how to use the upload widget and save files to Supabase database:
+
+#### Step 1: Create Database Table
+
+Run this SQL in your Supabase SQL editor:
+
+```sql
+-- Create files table
+CREATE TABLE files (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  name TEXT NOT NULL,
+  url TEXT NOT NULL,
+  size INTEGER NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+#### Step 2: Use Upload Widget with Database Save
+
+```tsx
+import { useState } from 'react';
+import { FileUploader, type UploadedFile } from 'supafile-react-upload-widget';
+import { createClient } from '@supabase/supabase-js';
+
+// Initialize Supabase
+const supabase = createClient(
+  'your-supabase-url',
+  'your-supabase-anon-key'
+);
+
+const MyComponent = () => {
+  const [files, setFiles] = useState<UploadedFile[]>([]);
+
+  // This function runs when a file is uploaded
+  const handleFileUpload = async (file: UploadedFile) => {
+    console.log('File uploaded:', file);
+    
+    // Add to local state
+    setFiles(prev => [...prev, file]);
+    
+    // Save to Supabase database
+    try {
+      const { data, error } = await supabase
+        .from('files')
+        .insert({
+          name: file.name,
+          url: file.url,
+          size: file.size
+        });
+
+      if (error) throw error;
+      console.log('File saved to database:', data);
+    } catch (error) {
+      console.error('Error saving to database:', error);
+    }
+  };
+
+  return (
+    <div>
+      <h1>Upload Files</h1>
+      
+      {/* Upload Widget */}
+      <FileUploader
+        supabaseUrl="your-supabase-url"
+        supabaseAnonKey="your-supabase-anon-key"
+        bucket="uploads"
+        onUploadComplete={handleFileUpload}
+      />
+      
+      {/* Display uploaded files */}
+      <div>
+        <h2>Uploaded Files ({files.length})</h2>
+        {files.map(file => (
+          <div key={file.id}>
+            <p><strong>Name:</strong> {file.name}</p>
+            <p><strong>Size:</strong> {(file.size / 1024).toFixed(1)} KB</p>
+            <p><strong>URL:</strong> <a href={file.url} target="_blank">{file.url}</a></p>
+            <hr />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default MyComponent;
+```
+
+#### Step 3: Load Files from Database
+
+```tsx
+import { useState, useEffect } from 'react';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient('your-supabase-url', 'your-supabase-anon-key');
+
+const FileList = () => {
+  const [files, setFiles] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Load files from database
+  useEffect(() => {
+    loadFiles();
+  }, []);
+
+  const loadFiles = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('files')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setFiles(data || []);
+    } catch (error) {
+      console.error('Error loading files:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) return <div>Loading files...</div>;
+
+  return (
+    <div>
+      <h2>Files from Database ({files.length})</h2>
+      {files.map(file => (
+        <div key={file.id} className="border p-4 mb-2">
+          <p><strong>Name:</strong> {file.name}</p>
+          <p><strong>Size:</strong> {(file.size / 1024).toFixed(1)} KB</p>
+          <p><strong>URL:</strong> <a href={file.url} target="_blank">{file.url}</a></p>
+          <p><strong>Uploaded:</strong> {new Date(file.created_at).toLocaleString()}</p>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default FileList;
+```
+
+#### Complete App Example
+
+```tsx
+import { useState, useEffect } from 'react';
+import { FileUploader, type UploadedFile } from 'supafile-react-upload-widget';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient('your-supabase-url', 'your-supabase-anon-key');
+
+const App = () => {
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+  const [savedFiles, setSavedFiles] = useState([]);
+
+  // Handle file upload
+  const handleUpload = async (file: UploadedFile) => {
+    console.log('File uploaded:', file);
+    
+    // Add to local state
+    setUploadedFiles(prev => [...prev, file]);
+    
+    // Save to database
+    try {
+      const { data, error } = await supabase
+        .from('files')
+        .insert({
+          name: file.name,
+          url: file.url,
+          size: file.size
+        });
+
+      if (error) throw error;
+      console.log('Saved to database:', data);
+      
+      // Refresh saved files
+      loadSavedFiles();
+    } catch (error) {
+      console.error('Database error:', error);
+    }
+  };
+
+  // Load files from database
+  const loadSavedFiles = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('files')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setSavedFiles(data || []);
+    } catch (error) {
+      console.error('Error loading files:', error);
+    }
+  };
+
+  // Load files on component mount
+  useEffect(() => {
+    loadSavedFiles();
+  }, []);
+
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-6">File Upload with Supabase</h1>
+      
+      {/* Upload Widget */}
+      <div className="mb-8">
+        <h2 className="text-lg font-semibold mb-4">Upload Files</h2>
+        <FileUploader
+          supabaseUrl="your-supabase-url"
+          supabaseAnonKey="your-supabase-anon-key"
+          bucket="uploads"
+          onUploadComplete={handleUpload}
+        />
+      </div>
+
+      {/* Recently Uploaded */}
+      {uploadedFiles.length > 0 && (
+        <div className="mb-8">
+          <h2 className="text-lg font-semibold mb-4">Recently Uploaded</h2>
+          {uploadedFiles.map(file => (
+            <div key={file.id} className="border p-3 mb-2 rounded">
+              <p><strong>{file.name}</strong> - {(file.size / 1024).toFixed(1)} KB</p>
+              <p className="text-sm text-blue-600">{file.url}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Files from Database */}
+      <div>
+        <h2 className="text-lg font-semibold mb-4">All Files ({savedFiles.length})</h2>
+        {savedFiles.map(file => (
+          <div key={file.id} className="border p-3 mb-2 rounded">
+            <p><strong>{file.name}</strong> - {(file.size / 1024).toFixed(1)} KB</p>
+            <p className="text-sm text-blue-600">{file.url}</p>
+            <p className="text-xs text-gray-500">
+              Uploaded: {new Date(file.created_at).toLocaleString()}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default App;
+```
+
+#### Key Points:
+
+1. **File Upload**: Use `onUploadComplete` to get file data including URL
+2. **Database Save**: Insert file data into Supabase table
+3. **File Access**: Query database to get all saved files
+4. **File URLs**: Access file URLs from `file.url` property
+5. **Real-time Updates**: Refresh database queries after uploads
+
+This simple example shows exactly how to use the upload widget to capture files and save them to Supabase database! 🎯
+
 ## Development
 
 ### Prerequisites
@@ -326,6 +632,16 @@ MIT License - see [LICENSE](LICENSE) file for details.
 - [Discussions](https://github.com/your-org/supafile/discussions)
 
 ## Changelog
+
+### v1.0.1 - Secure Supabase Client Support
+- **NEW**: Added support for passing Supabase client instances (recommended for production)
+- **NEW**: Enhanced security with proper authentication handling
+- **BREAKING**: Updated TypeScript types for better security
+- **NEW**: Comprehensive security documentation and warnings
+- **IMPROVED**: Better error handling and validation
+- **NEW**: Updated examples to use secure client approach
+- **IMPROVED**: Better UI with Lucide React icons
+- **IMPROVED**: More compact and responsive design
 
 ### v1.0.0
 - Initial release
