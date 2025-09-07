@@ -99,8 +99,8 @@ function App() {
 import { FileUploader } from 'supafile-react-upload-widget';
 
 <FileUploader
-  supabaseUrl="https://xyz.supabase.co"
-  supabaseAnonKey="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ supabaseUrl="https://xyz.supabase.co"
+  supabaseAnonKey="your-anon-key"
   bucket="user-uploads"
   maxFileSize={10 * 1024 * 1024}
   allowedTypes={['image/png', 'image/jpeg', 'application/pdf']}
