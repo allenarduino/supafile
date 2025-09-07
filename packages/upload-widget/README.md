@@ -27,7 +27,32 @@ pnpm add supafile-react-upload-widget
 
 ## Quick Start
 
-Perfect for Supabase projects! Just provide your Supabase credentials and you're ready to go:
+Perfect for Supabase projects! Two ways to use the component:
+
+### Option 1: Pass Supabase Client (Recommended for Production)
+
+```tsx
+import { FileUploader } from 'supafile-react-upload-widget';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  'https://your-project.supabase.co',
+  'your-supabase-anon-key'
+);
+
+function App() {
+  return (
+    <FileUploader
+      supabase={supabase}
+      bucket="your-storage-bucket"
+      onUploadComplete={(file) => console.log('File uploaded to Supabase:', file)}
+      onUploadError={(file, error) => console.error('Upload failed:', error)}
+    />
+  );
+}
+```
+
+### Option 2: Pass Credentials Directly (For Demos/Testing Only)
 
 ```tsx
 import { FileUploader } from 'supafile-react-upload-widget';
@@ -45,6 +70,8 @@ function App() {
 }
 ```
 
+> **⚠️ Security Note**: Option 2 exposes your Supabase credentials in the frontend code. Use Option 1 (passing a Supabase client) for production applications.
+
 ### Supabase Setup
 
 1. Create a Supabase project at [supabase.com](https://supabase.com)
@@ -58,9 +85,12 @@ function App() {
 
 | Prop | Type | Description |
 |------|------|-------------|
-| `supabaseUrl` | `string` | Your Supabase project URL (e.g., `https://xyz.supabase.co`) |
-| `supabaseAnonKey` | `string` | Your Supabase anonymous/public key |
+| `supabase` | `SupabaseClient` | **Option 1**: Your Supabase client instance (recommended for production) |
+| `supabaseUrl` | `string` | **Option 2**: Your Supabase project URL (for demos/testing only) |
+| `supabaseAnonKey` | `string` | **Option 2**: Your Supabase anonymous/public key (for demos/testing only) |
 | `bucket` | `string` | Supabase Storage bucket name |
+
+> **Note**: You must provide either `supabase` OR both `supabaseUrl` + `supabaseAnonKey`. The `supabase` prop is recommended for production use.
 
 ### Optional Props
 

@@ -14,21 +14,26 @@ export interface UploadError {
 }
 
 interface UploadOptions {
-    supabaseUrl: string;
-    supabaseAnonKey: string;
+    // Option 1: Pass Supabase client (recommended for production)
+    supabase?: SupabaseClient;
+    // Option 2: Pass credentials directly (for demos/testing only)
+    supabaseUrl?: string;
+    supabaseAnonKey?: string;
     bucket: string;
     maxFileSize?: number; // in bytes
     allowedTypes?: string[];
 }
 
 export const useUpload = ({
+    supabase,
     supabaseUrl,
     supabaseAnonKey,
     bucket,
     maxFileSize = 10 * 1024 * 1024, // 10MB default
     allowedTypes = [] // empty array means all types allowed
 }: UploadOptions) => {
-    const supabase: SupabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+    // Use provided client or create one from credentials
+    const client: SupabaseClient = supabase || createClient(supabaseUrl!, supabaseAnonKey!);
     const [files, setFiles] = useState<UploadedFile[]>([]);
     const [uploading, setUploading] = useState(false);
     const [errors, setErrors] = useState<UploadError[]>([]);
@@ -68,7 +73,7 @@ export const useUpload = ({
                 // Simulate progress for now (Supabase doesn't provide real progress)
                 onProgress?.(file, 0);
 
-                const { data, error } = await supabase.storage
+                const { data, error } = await client.storage
                     .from(bucket)
                     .upload(fileName, file);
 
@@ -78,7 +83,7 @@ export const useUpload = ({
                 }
 
                 // Use the new getPublicUrl method
-                const { data: { publicUrl } } = supabase.storage
+                const { data: { publicUrl } } = client.storage
                     .from(bucket)
                     .getPublicUrl(fileName);
 

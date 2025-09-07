@@ -10,9 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "supafile-react-upload-widget": "workspace:*",
+    "@supabase/supabase-js": "^2.57.0",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "supafile-react-upload-widget": "workspace:*"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",

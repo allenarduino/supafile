@@ -2,10 +2,14 @@ import React, { useRef } from 'react';
 import { useUpload, type UploadedFile } from '../hooks/useUpload';
 import { FilePreview } from './FilePreview';
 import { Upload, X } from 'lucide-react';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 interface FileUploaderProps {
-    supabaseUrl: string;
-    supabaseAnonKey: string;
+    // Option 1: Pass Supabase client (recommended for production)
+    supabase?: SupabaseClient;
+    // Option 2: Pass credentials directly (for demos/testing only)
+    supabaseUrl?: string;
+    supabaseAnonKey?: string;
     bucket: string;
     maxFileSize?: number;
     allowedTypes?: string[];
@@ -36,6 +40,7 @@ interface FileUploaderProps {
 }
 
 export const FileUploader: React.FC<FileUploaderProps> = ({
+    supabase,
     supabaseUrl,
     supabaseAnonKey,
     bucket,
@@ -67,7 +72,18 @@ export const FileUploader: React.FC<FileUploaderProps> = ({
     buttonSize
 }) => {
     const inputRef = useRef<HTMLInputElement>(null);
-    const { files, uploading, uploadFiles, removeFile } = useUpload({ supabaseUrl, supabaseAnonKey, bucket });
+
+    // Validate that either supabase client or credentials are provided
+    if (!supabase && (!supabaseUrl || !supabaseAnonKey)) {
+        throw new Error('Either supabase client or supabaseUrl + supabaseAnonKey must be provided');
+    }
+
+    const { files, uploading, uploadFiles, removeFile } = useUpload({
+        supabase,
+        supabaseUrl,
+        supabaseAnonKey,
+        bucket
+    });
 
     const handleFiles = (selectedFiles: FileList | null) => {
         if (!selectedFiles) return;

@@ -10,6 +10,9 @@ importers:
 
   apps/demo-app:
     dependencies:
+      '@supabase/supabase-js':
+        specifier: ^2.57.0
+        version: 2.57.0
       react:
         specifier: ^19.1.1
         version: 19.1.1
