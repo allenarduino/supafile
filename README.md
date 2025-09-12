@@ -2,6 +2,8 @@
 
 A modern, self-contained React file upload widget built specifically for Supabase users. Features drag-and-drop support, automatic Supabase storage integration, and beautiful styling out of the box.
 
+![Supafile Demo](https://github.com/allenarduino/supafile/blob/main/demo-screenshot/supafile-demo-screenshot.png)
+
 ## Features
 
 - **Secure Supabase Integration** - Pass Supabase client instance (recommended) or credentials
